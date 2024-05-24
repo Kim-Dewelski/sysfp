@@ -218,13 +218,16 @@ mod x86_imp {
         }
 
         #[inline]
-        pub fn to_single(flags: Flags, mut double: f64) -> (f64, Status) {
+        pub fn to_single(flags: Flags, mut double: f64) -> (f32, Status) {
             let status = host_op!(
                 flags;
                 "cvtsd2ss {fp}, {fp}";
                 fp = inout(xmm_reg) double,
             );
-            (double, Status { inner: status })
+            (
+                f32::from_bits(double.to_bits() as u32),
+                Status { inner: status },
+            )
         }
     }
 }
