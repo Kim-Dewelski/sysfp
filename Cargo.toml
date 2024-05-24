@@ -1,0 +1,13 @@
+[package]
+name = "sysfp"
+version = "0.0.1"
+edition = "2021"
+description = "A utility crate utilizing the system CPU rounding and exceptions for floating-point operations."
+readme = "README.md"
+repository = "https://github.com/Kim-Dewelski/sysfp"
+license-file = "LICENSE"
+keywords = ["float", "emulation", "no-std"]
+
+[dependencies]
+cfg-if = "1.0.0"
+static_assertions = "1.1.0"
