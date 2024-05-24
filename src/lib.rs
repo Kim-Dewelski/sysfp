@@ -32,7 +32,9 @@ mod x86_imp {
     impl Flags {
         #[inline]
         pub fn new() -> Self {
-            Self { inner: 0 }
+            Self {
+                inner: x86_64::_MM_MASK_MASK,
+            }
         }
 
         #[inline]
@@ -102,6 +104,11 @@ mod x86_imp {
         };
 
         #[inline]
+        pub fn empty() -> Self {
+            Self { inner: 0 }
+        }
+
+        #[inline]
         pub fn has_exceptions(self) -> bool {
             self.inner & x86_64::_MM_EXCEPT_MASK != 0
         }
@@ -134,6 +141,20 @@ mod x86_imp {
         #[inline]
         pub fn has(self, status: Self) -> bool {
             self.inner & status.inner == status.inner
+        }
+
+        #[inline]
+        pub fn or(self, other: Self) -> Self {
+            Self {
+                inner: self.inner | other.inner,
+            }
+        }
+
+        #[inline]
+        pub fn and(self, other: Self) -> Self {
+            Self {
+                inner: self.inner & other.inner,
+            }
         }
     }
 
