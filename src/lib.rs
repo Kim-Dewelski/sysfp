@@ -36,10 +36,15 @@ mod x86_imp {
         }
 
         #[inline]
-        pub fn with_rounding(self, rounding: Rounding) -> Self {
-            Self {
-                inner: (self.inner & !x86_64::_MM_ROUND_MASK) | rounding as u32,
-            }
+        pub fn with_rounding(mut self, rounding: Rounding) -> Self {
+            self.set_rounding(rounding);
+            self
+        }
+
+        #[inline]
+        pub fn with_ftz(mut self, enabled: bool) -> Self {
+            self.set_ftz(enabled);
+            self
         }
 
         #[inline]
@@ -55,6 +60,21 @@ mod x86_imp {
                 b if b == Rounding::Down as u32 => Rounding::Down,
                 _ => Rounding::Nearest,
             }
+        }
+
+        #[inline]
+        pub fn set_ftz(&mut self, enabled: bool) {
+            self.inner = (self.inner & !x86_64::_MM_FLUSH_ZERO_MASK)
+                | if enabled {
+                    x86_64::_MM_FLUSH_ZERO_ON
+                } else {
+                    x86_64::_MM_FLUSH_ZERO_OFF
+                }
+        }
+
+        #[inline]
+        pub fn ftz(self) -> bool {
+            self.inner & x86_64::_MM_FLUSH_ZERO_MASK != 0
         }
     }
 
